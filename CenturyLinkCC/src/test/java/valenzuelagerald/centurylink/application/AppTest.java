@@ -1,4 +1,4 @@
-package Valenzuela_Gerald.CenturyLinkCC;
+package valenzuelagerald.centurylink.application;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
