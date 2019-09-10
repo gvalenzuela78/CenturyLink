@@ -1,38 +1,32 @@
 package valenzuelagerald.centurylink.followercontroller;
 
-import java.util.Arrays;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import valenzuelagerald.centurylink.objects.User;
+import valenzuelagerald.centurylink.App;
+import valenzuelagerald.centurylink.objects.Users;
+import valenzuelagerald.centurylink.services.FollowerService;
 
 @RestController
 @RequestMapping(path = "/users")
 public class Followers {
 
 	@Autowired
-	private RestTemplate rest;
+	private static final Logger log = LoggerFactory.getLogger(App.class);
+	@Autowired
+	private FollowerService followerService;
 
-	@GetMapping(path = "{user}/following", produces = "application/json")
-	public ResponseEntity<User[]> getFollowers(@PathVariable("user") String user) {
+	@GetMapping(path = "{user}/followers", produces = "application/json")
+	public ResponseEntity<Users> getFollowers(@PathVariable("user") String user) {
 
-		HttpHeaders headers = new HttpHeaders();
-	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-	    HttpEntity<String> entity = new HttpEntity<String>(headers);
-	    
-		ResponseEntity<User[]> object = rest.exchange("https://api.github.com/users/{user}/followers?per_page=5", HttpMethod.GET, entity, User[].class, user);
+		return followerService.getFollowersFromGitHub(user);
 
-		return object;
 	}
 
 }
